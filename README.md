@@ -53,14 +53,14 @@ This will be a practical, hands-on guide that should answer the following questi
 
 ## The book
 
-[Introduction](1. Introduction.md)
+[Introduction](1.%20Introduction.md)
 
-[Overview](2. Overview.md)
+[Overview](2.%20Overview.md)
 
-[When to use an embedded database](3. When to use an embedded database.md)
+[When to use an embedded database](3.%20When%20to%20use%20an%20embedded%20database.md)
 
-[Programming with LiteDB](4. Programming with LiteDB.md)
+[Programming with LiteDB](4.%20Programming%20with%20LiteDB.md)
 
-[Migrating from SQLite to LiteDB](5. Migrating from SQLite to LiteDB.md)
+[Migrating from SQLite to LiteDB](5.%20Migrating%20from%20SQLite%20to%20LiteDB.md)
 
-[Conclusion](6. Conclusion.md)
+[Conclusion](6.%20Conclusion.md)
