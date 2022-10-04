@@ -1,0 +1,14 @@
+{
+  "name": "LiteDB-SQLite-Handbook",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prebuild": "powershell New-Item -ItemType Directory -Force -Path dist",
+    "build": "powershell $files = @(Get-ChildItem *.md); foreach ($file in $files) { mdpdf $file.name; }",
+    "postbuild": "powershell mv *.pdf dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
