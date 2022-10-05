@@ -1,0 +1,192 @@
+= When to use an embedded database
+
+SQLite and LiteDB have a lot in common regarding where they perform best.
+
+Being embedded databases, they naturally prosper at the network's edge.
+Indeed, they need no network at all, unlike client/server databases!
+
+The database lives alongside the application code and can be deployed wherever .NET code can run.
+And I don't mean just a host OS: think spatially instead.
+Like on a plane or rocket.
+
+Even if you don't plan on deploying your app in space, having an embedded database means not worrying about packets, access control, configuration, performance tuning, and many other concerns related to the client/server programming model.
+
+So, what are the ideal use cases for SQLite and LiteDB?
+
+== Command-line tools
+
+You can write CLI tools with C# and .NET.
+Such tools are typically local, even if they might talk to the network occasionally.
+
+A database can be handy when your CLI tool is crunching data, even if the data potentially comes from files or the network.
+
+For example, you can store your inputs and any intermediate results in a database, do your processing using SQL or document transformations, and output the results.
+In this scenario, the database is your staging area.
+
+We developers tend to "`reinvent the wheel`" instead of getting really familiar with SQL and map/reduce.
+Big mistake.
+Instead, let the database do the work for you!
+
+Use SQLite if your program inputs can be normalized either as tabular data that could potentially fit in one or more database tables.
+Depending on your processing needs, you might get by with mostly SQL and very little C# code to get to the finish line.
+
+Use LiteDB when you have a bunch of JSON blobs from some API or whatnot.
+The API surface of LiteDB is smaller than that of SQLite.
+Still, you can do a lot using LiteDB APIs, as we will see.
+For the rest, you'll employ LINQ and custom C# code.
+
+== Desktop apps
+
+In the .NET world, you write desktop apps using frameworks such as WinForms, WPF, or whatever the current "`modern`" stack Microsoft sells to developers (UWP, anyone?)
+
+Your app might do some data processing, and then the previous section applies here as well.
+
+In addition, you can use an embedded database for a few more things.
+
+*Logging and telemetry* are often a perfect fit for a local embedded database.
+Any widely used logging framework will have database "`sinks.`"
+
+Another would be *application configuration*.
+
+Even for simple key/value configuration, text files can be easily replaced by a database table.
+While text is more immediately readable, consider whether your user is supposed to edit it directly.
+
+If not, using a table (in SQLite) or collection (in LiteDB) might be preferable.
+
+One reason is extensibility.
+As soon as you need to store structured data for your configuration, e.g., serialized data-transfer objects (POCOs), a database is arguably a better fit than a text file.
+
+Yes, you can serialize objects into a variety of formats, like XML or JSON, and store them on the filesystem.
+Chances are, you'll end up with not one but multiple files, and while that's not a problem in isolation, it can become one.
+
+For instance, when you need to support a remote user, it might be easier to ask them to e-mail you a single file (`database.db`) than look up and zip a dozen files.
+
+Another interesting use case is an *application file format*.
+The SQLite docs have a https://sqlite.org/appfileformat.html[dedicated page on this topic].
+
+Think of this as an alternative to a proprietary binary format (like the original `.DOC`) or to a ZIP archive containing arbitrary files that make up the final document (like the OpenOffice ODP format).
+
+From the arguments that SQLite authors themselves make, I think the most convincing is the ability to update individual bits of the document more quickly than if you have to rebuild the binary or ZIP archive.
+
+Another convincing argument is the ability to support versioning and (potentially unlimited) undo/redo operations.
+
+Think of an embedded database as a second brain for your app, not just as a memory or storage mechanism.
+
+== Mobile apps
+
+Mobile apps have a few specifics that make an embedded database a sought-after tool.
+
+One is internet connectivity.
+You can't assume the device will be online at all times.
+A device-local database can act as a cache when the user goes offline.
+
+And when the device comes back online, there's often a need to synchronize its state.
+Your app will pull new content from the remote system and send local updates.
+This would be impossible to do without an on-device database.+++<aside>+++💡 Side note: neither SQLite nor LiteDB has any built-in support for synchronization.
+If this is a key requirement for your app, you'll need to either build your own synchronization logic or look for a database that supports it natively.+++</aside>+++
+
+Other concerns include resource constraints.
+Even as the chips in the latest iPhones are basically supercomputers, you as the developer have to treat the phone resources with deliberation, if only to preserve the battery.
+
+Having a local database means fewer round-trips to the network, fewer transformations of network payloads, and can positively impact the user experience.
+
+Both SQLite and LiteDB work great with mobile apps.
+
+== Websites and web apps
+
+The SQLite developers run their homepage on an SQLite database.
+Not sure about LiteDB.
+Both claim that the web is a supported deployment target.
+
+How far can you take it?
+
+SQLite or LiteDB could be a good fit for your website if all of the following apply:
+
+* you'll only ever need 1 web server (true for most small and medium websites - think up to 100K daily total views as a useful rule of thumb),
+* you are deploying to a "`serverfull`" environment, i.e., you can control most aspects of your runtime environment (as opposed to serverless, where you only "`own`" the code that you deploy),
+* your website is ready-heavy and write-light;
+neither SQLite nor LiteDB is designed for write concurrency
+
+These limitations are inherent to how these databases work.
+The entire database is one file, and you need physical access to it;
+you'll want the file to be local to the web server filesystem.
+
+Web apps are a different class.
+Especially SaaS.
+
+It's reasonable to assume that a typical web app will be write-heavy.
+It is likely multi-tenant.
+It may be event-driven, reacting to messages from the built-in integrations, etc.
+The number of concurrent database writes will be significant, and since neither database is designed for it, it would quickly become a bottleneck as you would need to synchronize access to it.
+
+Hypothetically, if you were to separate user data by storing each user's data in a physically separate database file, SQLite or LiteDB would still be an option.
+
+You may want to consider it for your use case.
+Generally speaking, I would rather look for a traditional client/server RDBMS for any sufficiently complex web app.
+
+== The best use cases for SQLite and LiteDB
+
+SQLite is by far the better choice if your data is ultimately relational.
+While you can model relationships in NoSQL databases, it's not their natural strength.
+
+LiteDB is an excellent choice when your data inputs and outputs are hierarchical, tree-like, and not tabular in nature.
+
+Given that JSON is the predominant serialization mechanism used by REST APIs, LiteDB is a good fit for use cases interacting with them.
+It consumes and produces JSON.
+
+Let's consider a few typical use cases for embedded databases and compare how they fare.
+
+=== Application data-store
+
+Both databases can be your trusted companion on the edge: in a command-line tool, a desktop, or a mobile app.
+
+Your app is the only client the database will ever have, and you can use and abuse the database as you see fit.
+
+If the database is central to your application's architecture, meaning your app is very much data-driven, then the decision on which database to use will rest on the nature of your data (relational vs.
+document-oriented).
+
+Some apps only need a database for caching network payloads, configuration, or object storage (as an alternative to a file system).
+Your decision will then be driven by other factors, such as performance, API ease of use, etc.
+Both databases can do this job equally well.
+
+=== Data processing and analysis
+
+SQLite is great at processing "`dirty`" data and making them clean.
+
+For example, you've been given a CSV export from an external system.
+Perhaps the source was even an Excel spreadsheet!
+Your boss wants you to clean it up, perhaps extracting some important statistical information into a report or two.
+
+SQLite is ideal for the job because it is very forgiving of dirty data.
+
+It can https://www.sqlite.org/csv.html[import CSV].
+
+It uses "`flexible typing,`" so even when a given column is supposed to be an integer, it will store a string value in it if it cannot parse the number from the input value.
+
+This is what you want when cleaning up unreliable external data.
+
+Just consider the alternative: if you were to do the same job using PostgreSQL, it would spit out an error code and refuse to touch your data.
+
+You have the full arsenal of SQL operators and functions to eventually figure out what to do with the "`wrong`" records.
+As for reporting, SQLite comes with a variety of functions that compute useful statistical values from your data sets.
+
+How does LiteDB perform at this job?
+
+It, too, can import data from CSV, although its CSV support is https://www.litedb.org/docs/collections/[somewhat limited] (scroll down the page for details).
+It's happier when importing from JSON.
+
+Given its natural flexibility, LiteDB is also forgiving of dirty or inconsistent data.
+
+It might not perform as well when you need to make complex data transformations directly in the database.
+You'll have to supplant its rudimentary SQL capabilities with your application code to achieve the same result that you would with SQL statements in SQLite.
+
+=== Data backup and transfer
+
+Both LiteDB and SQLite use a single file to store the database.
+You can easily move this file around to back up, transfer, and restore your database.
+
+You have a compact file that you can put on blob storage, send via e-mail, or put on a thumb drive.
+
+Unlike exports generated from MySQL or PostgreSQL natively (think an SQL dump), a database exported into an SQLite or LiteDB database file can be viewed and used in transit at any point.
+
+This can be invaluable in many customer support scenarios.

@@ -1,0 +1,70 @@
+= Introduction
+
+.NET developers have long had one embedded database option when developing for desktop or mobile: https://sqlite.org/index.html[SQLite].
+
+It is an excellent option.
+
+Nevertheless, it's no longer the only option.
+
+Maybe your use case is document-centric.
+Maybe you only need a few relations to model your domain.
+Maybe you want a developer experience that feels more native to C# and .NET.
+
+If that describes you, there's a good chance that https://www.litedb.org/[LiteDB] could be for you.
+
+== Assumptions and constraints
+
+This is a short book that assumes a few things about you:
+
+* you are a .NET developer
+* you are familiar with SQLite and have a general understanding of the SQL standard
+* you have heard about LiteDB and want to know how it compares to SQLite
+
+Does this describe you?
+If so, then read on!
+
+You don't have to know SQLite in detail to benefit from reading this.
+You don't even need to be well-versed in SQL;
+if you've only ever used ORMs (object-relationship mappers) like Entity Framework, you'll find how to use an equivalent approach with LiteDB.
+
+The only hard constraint is the .NET part.
+LiteDB only has a .NET API.
+
+== What you'll get by reading this book
+
+Life is short, so here is my promise to you.
+After you have read this book, which shouldn't take more than 30-60 minutes, you will be able to:
+
+* understand the conceptual differences between LiteDB and SQLite as well as features they have in common
+* make an informed argument for when to use SQLite and when LiteDB might be the more appropriate choice
+* get a good grasp of the various APIs and programming models that LiteDB makes available to you, and understand how they compare to SQLite APIs
+* evaluate what it takes to install and set up LiteDB in your app vis-a-vis SQLite
+* review a roadmap for migrating an existing app from SQLite to LiteDB and customize it for your use case
+
+This is not a philosophical treatise but a pragmatic handbook for a busy programmer.
+You'll find code samples throughout, and should you want to play along, download or fork the https://github.com/teekay/litedb-sqlite-handbook[Github repo.]
+
+=== What is not included
+
+I wrote this handbook to explain how to use LiteDB for embedded scenarios.
+SQLite is used for reference purposes.
+
+Therefore, we don't discuss SQLite more than is necessary to highlight the similarities and differences between the two databases.
+If you want to learn more about SQLite, there are other excellent https://www.oreilly.com/library/view/using-sqlite/9781449394592/[books] on the subject.
+
+This is also not the definitive guide to LiteDB.
+It will give you more than enough to get started but expect to visit the https://www.litedb.org/docs/[official docs] for more - when you need it.
+
+== About the author
+
+Hi, I am https://tomaskohl.com[Tom]!
+
+I've been developing with C# and .NET since 2013 or so.
+
+My desktop app for tango DJs - https://tomaskohl.com/apps/bewitched/[Bewitched] - uses SQLite for data storage.
+At some point, I was looking for a possible alternative since using SQLite in .NET has a few caveats, mostly due to it being a compiled C binary that needs wrappers in .NET.
+
+And, I found LiteDB.
+
+After documenting my initial impressions in a blog post, I found out that other people are interested in LiteDB and how it compares to SQLite.
+That's why I decided to create this little handbook.

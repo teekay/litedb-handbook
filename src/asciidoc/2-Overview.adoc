@@ -1,0 +1,150 @@
+= Overview
+
+So, what exactly _is_ LiteDB?
+
+Let's start with what the https://www.litedb.org/docs/getting-started/[official docs say]:
+
+____
+LiteDB is a [simple, fast and lightweight] embedded .NET document database.
+____
+
+Let's parse this:
+
+. Embedded - there is no client/server relationship.
+The database is a DLL that lives next to your application, serving your application only.
+. Document database - the primary concept is a "`document,`" not a "`table.`" We'll see what the difference means shortly.
+. .NET - it is for .NET, and .NET only
+
+By way of comparison, this is how https://sqlite.org/about.html[SQLite docs describe what SQLite is]:
+
+____
+SQLite is an embedded SQL database engine.
+____
+
+The biggest similarity?
+Both are embedded.
+
+The biggest difference?
+
+SQLite is a SQL database engine.
+LiteDB is a document database.
+This is by far the biggest difference between the two.
+
+== Relational databases vs. document databases
+
+Without going too deep into computer science, consider how relational databases work:
+
+* they are oriented around _tables_, each one having a _schema_,
+* a schema describes how each record in the table looks like - what its properties are and which are mandatory;
+each field can store values of a specific data type while the schema can enforce additional constraints on it,
+* records from one table can have relationships with records in other tables, and the cardinality of these relationships is enforced and protected by the database engine
+
+With this in mind, it's easier to grasp how document databases work:
+
+* they are oriented around collections, which are typically schemaless,
+* a collection contains _documents_ that are loosely structured;
+the database puts few constraints on what any document can contain,
+* documents can have sub-documents or refer to documents in other collections;
+unlike relational databases, however, document databases don't really protect these relationships, nor do they offer multiple cardinality options (1:1, 1:many, many:many).
+
+There are multiple additional differences, such as how the data is physically stored, that are not as important from the application programmer's perspective.
+We'll touch on some of them further on.+++<aside>+++💡 Wait a second, what *is* a document in this context?
+The quickest way to visualize a document, at least to a developer who has called a REST API once or twice, is to look at an arbitrary JSON: ```json { "id": 10, "title": "Feel Good", "artist": "Jacky Clark-Chisholm feat.
+Mary J.
+Blige", "published_at": "2020" } ``` That's what we call a document when we talk about document databases.
+We don't mean Word documents or anything like that.+++</aside>+++
+
+One funny aspect of SQLite that not everybody knows: even though it's a SQL database, it does not do strict typing.
+And https://sqlite.org/flextypegood.html[it's a feature], not a bug.
+Types (except integer primary keys) are more like hints, and SQLite will happily store a string in a numeric field.
+
+It even has an ANY data type, which you can abuse however you want, and SQLite won't complain.
+
+What this means is that you can use SQLite as a key-value store.
+Or as a JSON document store.
+Did I mention SQLite has solid https://sqlite.org/json1.html[JSON support]?
+
+Nothing prevents you from using it as a document database for your application.
+Whether or not that's a good idea is another thing.+++<aside>+++💡 For example, SQLite won't stop you from inserting a malformed JSON into a column, whereas you don't have to worry about that in LiteDB.+++</aside>+++
+
+On a certain level, the differences between SQLite and LiteDB disappear.
+
+The reverse is not true.
+LiteDB does not have a full "`SQL mode.`"
+
+== Comparing the main features
+
+Let's compare the main features:
+
+|===
+|  | SQLite | LiteDB
+
+| Type of database
+| SQL database
+| document database
+
+| Deployment
+| single file
+| single file
+
+| Deployment target
+| Desktop apps, mobile apps, embedded / edge, websites
+| Desktop apps, mobile apps, websites
+
+| ACID transactions
+| ✅
+| ✅
+
+| Indexes
+| ✅ (more index types than LiteDB)
+| ✅ (one index type only)
+
+| API
+| SQL, LINQ (via .NET libraries)
+| SQL (kinda), LINQ
+
+| Usable from
+| C + any language that has native bindings
+| .NET only
+
+|
+|
+|
+|===
+
+=== Comparing usage in .NET
+
+LiteDB is a native .NET citizen.
+
+`Install-Package LiteDB` is all it takes to get started.
+
+It's hard to overstate how convenient this is.
+
+SQLite is written in C and compiled to the native architecture.
+
+To use it in .NET, you need a wrapper that you call from C#.
+The wrapper then re-broadcasts your commands using P/Invoke and stuff to break out from the managed code and talk to the native compiled SQLite binary.
+
+As if this wasn't messy enough, if your app is multi-platform, you'll need a binary for each target architecture and a wrapper that can deal with them.
+
+At any rate, you are forced to think about your long-term goals upfront.
+You'll likely have to decide:
+
+* which incarnation will your app take (CLI, Desktop, Mobile, web...
+?)
+* what will be the host OS (Windows only?
+Or also Linux, Mac?)
+* what is the right tool for data access?
+(EF Core?
+Dapper?
+something else?)
+
+For SQLite, two options that make the most sense to me are:
+
+* https://docs.microsoft.com/en-us/ef/core/[EF Core], if you prefer to use an ORM;
+has a https://docs.microsoft.com/en-us/ef/core/providers/sqlite/?tabs=dotnet-core-cli[first-party SQLite provider]
+* https://github.com/praeclarum/sqlite-net[SQLite-net], which also has a minimalist ORM but won't get in your way if you speak SQL
+
+These concerns go away when using LiteDB.
+You'll use its native .NET API without any intermediary.+++<aside>+++💡 Invested in the Entity Framework?
+At this time, LiteDB has no official provider, and the [third-party providers](https://www.nuget.org/packages?q=litedb+entity) are not production-ready.+++</aside>+++
