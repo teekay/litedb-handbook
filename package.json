@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "prebuild": "powershell -NoProfile New-Item -ItemType Directory -Force -Path dist",
-    "build": "powershell -NoProfile $files = @(Get-ChildItem src/markdown/*.md); foreach ($file in $files) { mdpdf $file.FullName \"./dist/$($file.BaseName).pdf\"; }"
+    "build": "powershell -NoProfile $files = @(Get-ChildItem src/markdown/*.md); foreach ($file in $files) { mdpdf $file.FullName \"./dist/$($file.BaseName).pdf\"; }",
+    "build-4": "mdpdf \"./src/markdown/4. Programming with LiteDB.md\" ./dist/\"4. Programming with LiteDB.pdf\""
   },
   "keywords": [],
   "author": "",
