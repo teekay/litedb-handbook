@@ -1,2 +1,4 @@
 *.pdf
 dist
+node_modules
+noto-emoji

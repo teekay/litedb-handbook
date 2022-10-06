@@ -3,6 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "dependencies": {
+    "pandoc-filter": "^2.0.0",
+    "shelljs": "^0.8.4",
+    "twemoji": "^12.1.5"
+  },
   "scripts": {
     "prebuild": "powershell -NoProfile New-Item -ItemType Directory -Force -Path dist",
     "build": "powershell -NoProfile $files = @(Get-ChildItem src/markdown/*.md); foreach ($file in $files) { mdpdf $file.FullName \"./dist/$($file.BaseName).pdf\"; }",
