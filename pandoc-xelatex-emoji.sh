@@ -1,6 +1,7 @@
 pandoc -f markdown \
 -V mainfont="DejaVu Sans" \
 -V monofont="DejaVu Sans Mono" \
+-V titlepage=true \
 --pdf-engine=xelatex \
 --template eisvogel.latex \
 --highlight-style espresso \
