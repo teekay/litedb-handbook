@@ -2,24 +2,7 @@
 
 ## Purpose of this document
 
-I want to test the waters and create a tiny info-product based on the Google juice I have for the LiteDB article.
-
-I would create a PDF, put it on Gumroad, make it free but let people pay if they want to, then link to the Gumroad page from the blog post. And see.
-
-### Decisions
-
-- how long should it be? → I’d say 20-50 pages max.
-- do I contact the LiteDB makers and ask for a review? → I’d say yes, I could get valuable feedback and a chance to correct mistakes, and possibly also an endorsement
-
-### Risks
-
-- Not having a CS background, how do I competently compare things like indexes? → get a review by LiteDB makers 😜
-
-### Upside potential (=why do this)
-
-- learn a little about making and marketing info-products
-- generate a tiny side income (no expectations, though)
-- leverage the experience to make a bigger bet
+I want to learn creating developer-focused educational material. The best way to learn is by doing.
 
 ## The value proposition
 
@@ -33,17 +16,17 @@ This will be a practical, hands-on guide that should answer the following questi
 
 ## Outline
 
-- Introduction → say what the reader will learn and what’s the big prize (1 page)
-- Overview and side-by-side comparison of SQLite and LiteDB using a table (2 pages)
+- Introduction → say what the reader will learn and what’s the big prize
+- Overview and side-by-side comparison of SQLite and LiteDB using a table
 - Making a decision
-    - When to use SQLite with examples (2 pages)
-    - When to use LiteDB with examples (2 pages)
+    - When to use SQLite with examples
+    - When to use LiteDB with examples
 - Using LiteDB vs SQLite in a C# app
     - API comparison (4 pages)
-    - Comparing installation and dependencies (2 pages)
-    - Performance comparison (1 page)
-- Migrating an existing app from SQLite to LiteDB (2 pages)
-- Summary of key points and next steps (1 page)
+    - Comparing installation and dependencies
+    - Performance comparison
+- Migrating an existing app from SQLite to LiteDB
+- Summary of key points and next steps
 
 ## Collateral
 
