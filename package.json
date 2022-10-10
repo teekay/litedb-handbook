@@ -9,7 +9,8 @@
     "twemoji": "^12.1.5"
   },
   "scripts": {
-    "build": "./pandoc-xelatex-emoji.sh"
+    "build-pdf": "./pandoc-xelatex-emoji-pdf.sh",
+    "build-epub": "./pandoc-xelatex-emoji-epub.sh"
   },
   "keywords": [],
   "author": "",
