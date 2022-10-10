@@ -22,7 +22,7 @@ This will be a practical, hands-on guide that should answer the following questi
     - When to use SQLite with examples
     - When to use LiteDB with examples
 - Using LiteDB vs SQLite in a C# app
-    - API comparison (4 pages)
+    - API comparison
     - Comparing installation and dependencies
     - Performance comparison
 - Migrating an existing app from SQLite to LiteDB
